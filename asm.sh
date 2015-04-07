@@ -1,0 +1,1 @@
+java -classpath "asm.jar;asm-util.jar" org.objectweb.asm.util.ASMifier bin/hello/HelloWorld.class

@@ -20,13 +20,29 @@ public class Bytecode implements Opcodes{
 		ClassWriter cw = new ClassWriter(0);
 		MethodVisitor mv;
 		
+		/*
+		 * Type    | Descriptor
+		 * void    | V
+		 * boolean | Z
+		 * char    | C
+		 * byte    | B
+		 * short   | S
+		 * int     | I
+		 * float   | F
+		 * long    | J
+		 * double  | D
+		 * type[]  | [<type>
+		 * class   | L<class>;
+		 */
+		
 		cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, "hello/HelloWorld", null, "java/lang/Object", null);
 		
-		{
+		{ //Constructor?
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
 			mv.visitCode();
-			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
+			mv.visitVarInsn(ALOAD, 0);//Load something.. maybe loading constructor?
+			//                 How to invoke | Super class    | Method name | (args)returnType
+			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V"); 
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();

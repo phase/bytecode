@@ -3,11 +3,12 @@ package hello;
 public class HelloWorld {
 
 	public static void main(String[] args){
-		System.out.println("Hello, World!");
+		HelloWorld h = new HelloWorld();
+		h.test();
 	}
 	
-	public static void test(){
-		main(new String[] {});
+	public void test(){
+		System.out.println("test");
 	}
 	
 }
