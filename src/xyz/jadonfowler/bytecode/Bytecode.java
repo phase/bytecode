@@ -20,41 +20,24 @@ public class Bytecode implements Opcodes{
 		ClassWriter cw = new ClassWriter(0);
 		MethodVisitor mv;
 		
-		cw.visit(V1_6, ACC_PUBLIC + ACC_SUPER, "hello/HelloWorld", null, "java/lang/Object", null);
+		cw.visit(V1_5, ACC_PUBLIC + ACC_SUPER, "hello/HelloWorld", null, "java/lang/Object", null);
 		
 		cw.visitSource("HelloWorld.java", null);
 		
 		{
 			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-			mv.visitCode();
-			Label l0 = new Label();
-			mv.visitLabel(l0);
-			mv.visitLineNumber(4, l0);
 			mv.visitVarInsn(ALOAD, 0);
-			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V", true);
+			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V");
 			mv.visitInsn(RETURN);
-			Label l1 = new Label();
-			mv.visitLabel(l1);
-			mv.visitLocalVariable("this", "Lhello/HelloWorld;", null, l0, l1, 0);
 			mv.visitMaxs(1, 1);
 			mv.visitEnd();
 		}
 		{
 			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
-			mv.visitCode();
-			Label l0 = new Label();
-			mv.visitLabel(l0);
-			mv.visitLineNumber(7, l0);
 			mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-			mv.visitLdcInsn(String.format("Hello, %s!", name));
-			mv.visitMethodInsn(INVOKESPECIAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V", true);
-			Label l1 = new Label();
-			mv.visitLabel(l1);
-			mv.visitLineNumber(8, l1);
+			mv.visitLdcInsn("Hello " + name);
+			mv.visitMethodInsn(INVOKESPECIAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
 			mv.visitInsn(RETURN);
-			Label l2 = new Label();
-			mv.visitLabel(l2);
-			mv.visitLocalVariable("args", "[Ljava/lang/String;", null, l0, l2, 0);
 			mv.visitMaxs(2, 1);
 			mv.visitEnd();
 		}
