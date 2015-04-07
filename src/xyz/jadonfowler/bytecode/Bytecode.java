@@ -35,10 +35,21 @@ public class Bytecode implements Opcodes{
 			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
 			mv.visitCode();
 			mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-			mv.visitLdcInsn("Hello " + name);
+			mv.visitLdcInsn("main: " + name);
 			mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(2, 1);
+			mv.visitEnd();
+		}
+		
+		{
+			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "test", "()V", null, null);
+			mv.visitCode();
+			mv.visitInsn(ICONST_0);
+			mv.visitTypeInsn(ANEWARRAY, "java/lang/String");
+			mv.visitMethodInsn(INVOKESTATIC, "hello/HelloWorld", "main", "([Ljava/lang/String;)V");
+			mv.visitInsn(RETURN);
+			mv.visitMaxs(1, 0);
 			mv.visitEnd();
 		}
 		
@@ -58,6 +69,8 @@ public class Bytecode implements Opcodes{
 		Class<?> helloWorldClass = loader.define("hello.HelloWorld", compile("Test"));
 		Method m = helloWorldClass.getMethod("main", String[].class);
 		m.invoke(null, (Object) new String[] {});
+		Method m2 = helloWorldClass.getMethod("test");
+		m2.invoke(null);
 	}
 
 }
