@@ -16,9 +16,11 @@ import org.objectweb.asm.Opcodes;
  */
 public class Bytecode implements Opcodes{
 
+	static ClassWriter cw = new ClassWriter(0);
+	static MethodVisitor mv;
+	
 	public static byte[] compile(String name){
-		ClassWriter cw = new ClassWriter(0);
-		MethodVisitor mv;
+		
 		
 		/*
 		 * Type    | Descriptor
@@ -33,6 +35,18 @@ public class Bytecode implements Opcodes{
 		 * double  | D
 		 * type[]  | [<type>
 		 * class   | L<class>;
+		 */
+		
+		/*
+		 * Method Discriptors
+		 *  (arguments) return
+		 *  
+		 *  public static void main(String[] a){}
+		 *  ([Ljava/lang/String;)V
+		 *  
+		 *  public String test(int i, boolean b){}
+		 *  (IZ)Ljava/lang/String; - No separation between types
+		 *  
 		 */
 		
 		cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, "hello/HelloWorld", null, "java/lang/Object", null);
@@ -72,6 +86,12 @@ public class Bytecode implements Opcodes{
 		cw.visitEnd();
 		
 		return cw.toByteArray();
+	}
+	
+	public static void createMethod(int modifiers, String name, String args, String returnType){
+		if(args == null) args = "";
+		if(returnType == null) returnType = "V";
+		mv = cw.visitMethod(modifiers, name, "("+args+")"+returnType, null, null);
 	}
 	
 	public static class DynamicClassLoader extends ClassLoader{
