@@ -6,6 +6,8 @@ package xyz.jadonfowler.bytecode;
 
 import java.lang.reflect.Method;
 
+import jdk.internal.org.objectweb.asm.util.ASMifier;
+
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
@@ -49,37 +51,49 @@ public class Bytecode implements Opcodes{
 		 *  
 		 */
 		
-		cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, "hello/HelloWorld", null, "java/lang/Object", null);
+		cw.visit(V1_7, ACC_PUBLIC + ACC_SUPER, "java/lang/Integer", null, "java/lang/Number", new String[] {"java/lang/Comparable"});
 		
-		{ //Constructor?
-			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
-			mv.visitCode();
-			mv.visitVarInsn(ALOAD, 0);//Load something.. maybe loading constructor?
-			//                 How to invoke | Super class    | Method name | (args)returnType
-			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V"); 
-			mv.visitInsn(RETURN);
-			mv.visitMaxs(1, 1);
-			mv.visitEnd();
-		}
+//		{ //Constructor?
+//			mv = cw.visitMethod(ACC_PUBLIC, "<init>", "()V", null, null);
+//			mv.visitCode();
+//			mv.visitVarInsn(ALOAD, 0);//Load something.. maybe loading constructor?
+//			//                 How to invoke | Super class    | Method name | (args)returnType
+//			mv.visitMethodInsn(INVOKESPECIAL, "java/lang/Object", "<init>", "()V"); 
+//			mv.visitInsn(RETURN);
+//			mv.visitMaxs(1, 1);
+//			mv.visitEnd();
+//		}
+//		{
+//			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+//			mv.visitCode();
+//			mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
+//			mv.visitLdcInsn("main: " + name);
+//			mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
+//			mv.visitInsn(RETURN);
+//			mv.visitMaxs(2, 1);
+//			mv.visitEnd();
+//		}
+//		
+//		{
+//			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "test", "()V", null, null);
+//			mv.visitCode();
+//			mv.visitInsn(ICONST_0);
+//			mv.visitTypeInsn(ANEWARRAY, "java/lang/String");
+//			mv.visitMethodInsn(INVOKESTATIC, "hello/HelloWorld", "main", "([Ljava/lang/String;)V");
+//			mv.visitInsn(RETURN);
+//			mv.visitMaxs(1, 0);
+//			mv.visitEnd();
+//		}
+		
 		{
-			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "main", "([Ljava/lang/String;)V", null, null);
+			mv = cw.visitMethod(ACC_PUBLIC, "print", "()V", null, null);
 			mv.visitCode();
 			mv.visitFieldInsn(GETSTATIC, "java/lang/System", "out", "Ljava/io/PrintStream;");
-			mv.visitLdcInsn("main: " + name);
-			mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(Ljava/lang/String;)V");
+			mv.visitVarInsn(ALOAD, 0);
+			mv.visitMethodInsn(INVOKEVIRTUAL , "java/lang/Integer", "intValue", "()I");
+			mv.visitMethodInsn(INVOKEVIRTUAL, "java/io/PrintStream", "println", "(I)V");
 			mv.visitInsn(RETURN);
 			mv.visitMaxs(2, 1);
-			mv.visitEnd();
-		}
-		
-		{
-			mv = cw.visitMethod(ACC_PUBLIC + ACC_STATIC, "test", "()V", null, null);
-			mv.visitCode();
-			mv.visitInsn(ICONST_0);
-			mv.visitTypeInsn(ANEWARRAY, "java/lang/String");
-			mv.visitMethodInsn(INVOKESTATIC, "hello/HelloWorld", "main", "([Ljava/lang/String;)V");
-			mv.visitInsn(RETURN);
-			mv.visitMaxs(1, 0);
 			mv.visitEnd();
 		}
 		
@@ -101,12 +115,14 @@ public class Bytecode implements Opcodes{
 	}
 	
 	public static void main(String[] args) throws Exception {
+//		DynamicClassLoader loader = new DynamicClassLoader();
+//		Class<?> helloWorldClass = loader.define("hello.HelloWorld", compile("Test"));
+//		Method m = helloWorldClass.getMethod("main", String[].class);
+//		m.invoke(null, (Object) new String[] {});
+//		Method m2 = helloWorldClass.getMethod("test");
+//		m2.invoke(null);
 		DynamicClassLoader loader = new DynamicClassLoader();
-		Class<?> helloWorldClass = loader.define("hello.HelloWorld", compile("Test"));
-		Method m = helloWorldClass.getMethod("main", String[].class);
-		m.invoke(null, (Object) new String[] {});
-		Method m2 = helloWorldClass.getMethod("test");
-		m2.invoke(null);
+		loader.define("java.lang.Integer", compile("Test"));
 	}
 
 }

@@ -2,13 +2,16 @@ package hello;
 
 public class HelloWorld {
 
-	public static void main(String[] args){
-		HelloWorld h = new HelloWorld();
-		h.test();
+	public int intValue(){
+		return 1;
 	}
 	
-	public void test(){
-		System.out.println("test");
+	public void print(){
+		System.out.println(intValue());
+	}
+	
+	public static void main(String... args){
+		new HelloWorld().print();
 	}
 	
 }
